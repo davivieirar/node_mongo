@@ -11,6 +11,8 @@ app.use(
   })
 );
 
+app.use(express.json())
+
 const HOST = 'localhost'
 const PORT = 5000
 
