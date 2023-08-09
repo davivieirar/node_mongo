@@ -39,28 +39,51 @@ app.post('/usuario', async (req, res) => {
 
 })
 
-app.get('/usuario', async (req, res) => {
+/* GET All /usuarios */
+app.get('/usuarios', async (req, res) => {
   const usuarios = await Usuario.find();
 
-  res.status(200).json(usuarios)
+  if(usuarios.length === 0){
+  res.status(422).json({msg: 'Nenhum usuário encontrado'})
+  } else {
+    res.status(200).json(usuarios)
+  }
 
 })
 
+
+/* GET by Id /usuario/:id */
 app.get('/usuario/:id', async (req, res) => {
   const id = req.params.id
-  const usuarios = await Usuario.findOne({ _id: id });
+  // Se o tamanho do id for menor que o padrão, imprime mensagem de tamanho inválido (Número padrão de caracteres: 24)
+  if(id.length !== 24){
+    res.status(422).json({msg: 'Tamanho inválido do id'})
+    return
+  }
 
-  res.status(200).json(usuarios)
+  const usuario = await Usuario.findOne({ _id: id });
+
+  // Se o id não for encontrado, será impressa uma mensagem informando
+  if(usuario){
+    res.status(200).json(usuario)
+  } else {
+    res.status(422).json({msg: 'Usuário não encontrado!'})
+  }
+
 
 })
 
+/* DELETE by Id /usuario/:id */
 app.delete('/usuario/:id', async (req, res) => {
   const id = req.params.id
   const usuario = await Usuario.findOne({ _id: id });
-
-  await Usuario.deleteOne({ _id: usuario.id })
-
-  res.status(200).json('Usuário deletado com sucesso')
+  
+  if(usuario){
+    await Usuario.deleteOne({ _id: usuario.id })
+    res.status(200).json('Usuário deletado com sucesso')
+  } else {
+    res.status(422).json({msg: 'Usuário não encontrado!'})
+  }
 
 })
 
