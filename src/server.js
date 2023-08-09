@@ -87,6 +87,7 @@ app.delete('/usuario/:id', async (req, res) => {
 
 })
 
+
 app.put('/usuario/:id', async (req, res) => {
   const id = req.params.id
   // desestruturação do body para acessar os atributos do objeto que será enviado
